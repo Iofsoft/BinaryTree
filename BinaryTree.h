@@ -4,6 +4,7 @@
     #include<stdlib.h>
     #include<stdio.h>
     #include<string.h>
+    #include<ctype.h>
 
     typedef struct _node {
         char item;
@@ -13,7 +14,7 @@
 
     typedef struct {
         t_node *root;
-        int n;
+        int height;
     } t_binary_tree;
 
     typedef struct {
@@ -25,9 +26,12 @@
     void remove_newline(char* input);
     char* get_operation(char* input);
     char* get_tree_code(char* input);
+    int sequence_validation(char *tree_code);
     t_node* create_node(char item);
+    int letters_count(char* tree_code);
     t_binary_tree* create_tree();
-    t_node* build_tree(char* sequence, int* index);
+    t_node* build_tree(char** tree_code);
+
     void print_tree(t_node *root, int height);
     void pre_order(t_node *node);
     void in_order(t_node *node);

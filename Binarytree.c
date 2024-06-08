@@ -3,7 +3,6 @@
 void menu(t_binary_tree *tree){
     char *operation = "";
     while(strcmp(operation, "exit") != 0){
-        printf("\n");
         char input[100];
         fgets(input, sizeof(input), stdin);
         remove_newline(input);
@@ -11,8 +10,11 @@ void menu(t_binary_tree *tree){
 
         if(strcmp(operation,"create") == 0){
             char *tree_code = get_tree_code(input);
-            int index = 0;
-            tree->root = build_tree(tree_code, &index);
+            if(!sequence_validation(tree_code)){
+                printf("invalid");
+                continue;
+            };
+            tree->root = build_tree(&tree_code);
             continue;
         }
 
@@ -30,6 +32,7 @@ void menu(t_binary_tree *tree){
             continue;
         }
         if(strcmp(operation, "height") == 0){
+            int choosen_node = get_height_substring(tree);
             continue;
         }
 
@@ -41,44 +44,66 @@ void menu(t_binary_tree *tree){
 
 char* get_operation(char* input){
     char delimiters[] = " :(";
-    char *operation;
     char *token = strdup(input); // Fiz isso para a string input permanecer a mesma
-    operation = strtok(token, delimiters);
+    char *operation = strtok(token, delimiters);
     return operation;
 }
 
 char* get_tree_code(char* input){
-    char *index = strpbrk(input,"(");
-    char *tree_code = strdup(index);
+    char *ptr_index = strpbrk(input,"(");
+    char *tree_code = strdup(ptr_index);
     return tree_code;
 }
 
 void remove_newline(char* input){
-    size_t len = strlen(input);
-    if (len > 0 && input[len - 1] == '\n') {
-        input[len - 1] = '\0';
-    }
+    size_t length = strlen(input);
+    if (input[length - 1] == '\n') input[length - 1] = '\0';
 }
 
+t_node* build_tree(char** tree_code) {
+    if(**tree_code == ')') (*tree_code)++;
 
-t_node* build_tree(char* sequence, int* index) {
-    if(sequence[*index] == ')') (*index)++;
+    if(**tree_code == ',') (*tree_code)++;
 
-    if(sequence[*index] == ',') (*index)++;
+    if (**tree_code == '(') {
+        (*tree_code)++;
 
-    if (sequence[*index] == '(') {
-        (*index)++;
-        if (sequence[*index] == ')') {
-            (*index)++;
+        if (**tree_code == ')') {
+            (*tree_code)++;
             return NULL;
         }
-        t_node* node = create_node(sequence[*index]);
-        (*index)++;
-        node->left = build_tree(sequence, index);
-        node->right = build_tree(sequence, index);
+
+        t_node* node = create_node(**tree_code);
+        (*tree_code)++;
+        node->left = build_tree(tree_code);
+        node->right = build_tree(tree_code);
         return node;
     }
-    (*index)++;
+    (*tree_code)++;
+}
+
+int sequence_validation(char *tree_code){
+    int open = 0;
+    int close = 0;
+    int letters = letters_count(tree_code);
+    while (*tree_code != '\0' ){
+        if (*tree_code == '(') open++;
+        if (*tree_code == ')') close++;
+        tree_code++;
+    }
+    if (open != close) return 0;
+    int parenthesis_required = (letters *2) +1;
+    if ( open == parenthesis_required) return 1;
+    return 0;
+}
+
+int letters_count(char* tree_code) {
+    int count = 0;
+    while(*tree_code != '\0') {
+        if (isalpha(*tree_code)) count++;
+        tree_code++;
+    }
+    return count;
 }
 
 t_binary_tree* create_tree(){
@@ -95,14 +120,25 @@ t_node* create_node(char item){
     return node;
 }
 
-void print_tree(t_node *root, int height){
-    if(root == NULL) return;
-    print_tree(root->right, height + 1);
-    for(int i = 0; i < height; i++){
-        printf("    ");
+int get_height_substring ()
+
+void print_tree(t_node *root, int height) {
+    if (root == NULL) {
+        return;
     }
+
+    if (root->right != NULL) {
+        print_tree(root->right, height + 1);
+    }
+
+    for (int i = 0; i < height; i++) {
+        printf("   ");
+    }
+
     printf("%c\n", root->item);
-    print_tree(root->left, height + 1);
+    if (root->left != NULL) {
+        print_tree(root->left, height + 1);
+    }
 }
 
 void pre_order(t_node *node) {
