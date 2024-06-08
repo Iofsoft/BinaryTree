@@ -3,17 +3,16 @@
 t_stack* create(int size){
     t_stack *stack = (t_stack*) malloc (sizeof (t_stack));
     stack->top = -1;
-    stack->items = (int*) malloc (sizeof(int)*size);
+    stack->items = (t_node**) malloc (sizeof(t_node)*size);
     return stack;
 }
 
-int push(t_stack *stack, int element){
+void push(t_stack *stack, t_node* element){
     stack->top++;
     stack->items[stack->top] = element;
 }
 
-int pop(t_stack *stack){
-    stack->top--;
-    return stack->items[stack->top+1];
+t_node* pop(t_stack *stack){
+    return stack->items[stack->top--];
 }
 

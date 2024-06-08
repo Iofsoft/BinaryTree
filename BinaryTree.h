@@ -18,18 +18,24 @@
 
     typedef struct {
         int top;
-        int *items;
+        t_node **items;
     }t_stack;
 
+    void menu(t_binary_tree *tree);
     char* get_operation(char* input);
+    char* get_tree_code(char* input);
+    t_node* create_node(char item);
+    t_binary_tree* create_tree();
+    t_node* build_tree(char *tree_code);
+    void print_tree(t_node *root, int height);
     void pre_order(t_node *node);
     void in_order(t_node *node);
     void post_order(t_node *node);
 
 
     t_stack* create(int size);
-    int push(t_stack *stack, int element);
-    int pop(t_stack *stack);
+    void push(t_stack *stack, t_node* element);
+    t_node* pop(t_stack *stack);
 
 
 
