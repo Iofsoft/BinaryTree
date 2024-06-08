@@ -22,30 +22,26 @@
         int* items;
     }t_stack;
 
+    t_binary_tree* create_tree();
     void menu(t_binary_tree *tree);
     void remove_newline(char* input);
     char* get_operation(char* input);
     char* get_tree_code(char* input);
-    int sequence_validation(char *tree_code);
-    t_node* create_node(char item);
-    int letters_count(char* tree_code);
-    t_binary_tree* create_tree();
-    t_node* build_tree(char** tree_code);
 
-    void print_tree(t_node *root, int height);
+    int sequence_validation(char *tree_code);
+    int letters_counter(char* tree_code);
+
+    t_node* build_tree(char** tree_code);
+    t_node* create_node(char item);
+
     void pre_order(t_node *node);
     void in_order(t_node *node);
     void post_order(t_node *node);
 
+    char* get_height_target(char* input);
+    int node_height(t_node* node, char* target);
 
-    t_stack* create_stack(int size);
-    int is_empty(t_stack* stack);
-    void destroy_stack(t_stack* stack);
-    void push(t_stack *stack, int element);
-    int pop(t_stack *stack);
-
-
-
-
+    void print_tree(t_node *root, int height);
+    void free_tree(t_node* node);
 
 #endif //BINARYTREE_H
