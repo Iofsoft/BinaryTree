@@ -22,11 +22,12 @@
     }t_stack;
 
     void menu(t_binary_tree *tree);
+    void remove_newline(char* input);
     char* get_operation(char* input);
     char* get_tree_code(char* input);
     t_node* create_node(char item);
     t_binary_tree* create_tree();
-    t_node* build_tree(char *tree_code, int* index );
+    t_node* build_tree(char* sequence, int* index);
     void print_tree(t_node *root, int height);
     void pre_order(t_node *node);
     void in_order(t_node *node);

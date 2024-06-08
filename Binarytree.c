@@ -6,11 +6,9 @@ void menu(t_binary_tree *tree){
         printf("\n");
         char input[100];
         fgets(input, sizeof(input), stdin);
-        size_t len = strlen(input);
-        if (len > 0 && input[len - 1] == '\n') {
-            input[len - 1] = '\0';
-        }
+        remove_newline(input);
         operation = get_operation(input);
+
         if(strcmp(operation,"create") == 0){
             char *tree_code = get_tree_code(input);
             int index = 0;
@@ -54,29 +52,33 @@ char* get_tree_code(char* input){
     char *tree_code = strdup(index);
     return tree_code;
 }
-t_node* build_tree(char* tree_code, int* index) {
-    t_node* node = NULL;
-    if (tree_code[*index] == '(') {
-        *index += 1;
-        node = build_tree(tree_code, index);
-    } else if (tree_code[*index] >= 'A' && tree_code[*index] <= 'Z') {
-        node = create_node(tree_code[*index]);
-        *index += 1;
+
+void remove_newline(char* input){
+    size_t len = strlen(input);
+    if (len > 0 && input[len - 1] == '\n') {
+        input[len - 1] = '\0';
     }
-    if (tree_code[*index] == ',') {
-        *index += 1;
-        if (node!= NULL) {
-            node->left = build_tree(tree_code, index);
+}
+
+
+t_node* build_tree(char* sequence, int* index) {
+    if(sequence[*index] == ')') (*index)++;
+
+    if(sequence[*index] == ',') (*index)++;
+
+    if (sequence[*index] == '(') {
+        (*index)++;
+        if (sequence[*index] == ')') {
+            (*index)++;
+            return NULL;
         }
-    }
-    if (tree_code[*index] == ')') {
-        *index += 1;
+        t_node* node = create_node(sequence[*index]);
+        (*index)++;
+        node->left = build_tree(sequence, index);
+        node->right = build_tree(sequence, index);
         return node;
     }
-    if (node!= NULL) {
-        node->right = build_tree(tree_code, index);
-    }
-    return node;
+    (*index)++;
 }
 
 t_binary_tree* create_tree(){
@@ -87,7 +89,6 @@ t_binary_tree* create_tree(){
 
 t_node* create_node(char item){
     t_node *node =  malloc (sizeof (t_node));
-
     node->item = item;
     node->left = NULL;
     node->right = NULL;
