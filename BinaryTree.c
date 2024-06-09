@@ -24,7 +24,7 @@ void menu(t_binary_tree *tree){
             continue;
         }
 
-       if(strcmp(operation,"pre") == 0){
+        if(strcmp(operation,"pre") == 0){
             pre_order(tree->root);
             printf("\n");
             continue;
@@ -35,18 +35,19 @@ void menu(t_binary_tree *tree){
             printf("\n");
             continue;
         }
+        
         if(strcmp(operation, "post") == 0){
             post_order(tree->root);
             printf("\n");
             continue;
         }
+        
         if(strcmp(operation, "height") == 0){
             char* target = get_height_target(input);
             target = strupr(target);
             int height = node_height(tree->root, target);
 
             if(height < 0) printf("Tree Node %s not found.\n", target);
-
             else printf("Height node %s : %d\n", target, height);
 
             continue;
@@ -78,23 +79,22 @@ char* get_tree_code(char* input){
 }
 
 int sequence_validation(char *tree_code){
-    int open = 0;
-    int close = 0;
+    int open_parenthesis = 0;
+    int close_parenthesis = 0;
     int letters = letters_counter(tree_code);
-    while (*tree_code != '\0' ){
-        if (*tree_code == '(') open++;
-        if (*tree_code == ')') close++;
+    while (*tree_code) {
+        if (*tree_code == '(') open_parenthesis++;
+        else if (*tree_code == ')') close_parenthesis++;
         tree_code++;
     }
-    if (open != close) return 0;
-    int parenthesis_required = (letters *2) +1;
-    if ( open == parenthesis_required) return 1;
-    return 0;
+    if(open_parenthesis != close_parenthesis) return 0;
+    int parenthesis_required = (letters * 2) + 1;
+    return open_parenthesis == parenthesis_required;
 }
 
 int letters_counter(char* tree_code) {
     int count = 0;
-    while(*tree_code != '\0') {
+    while(*tree_code) {
         if (isalpha(*tree_code)) count++;
         tree_code++;
     }
@@ -190,7 +190,7 @@ void print_tree(t_node *root, int height) {
     }
 }
 
-void free_tree(t_node* node) {
+void free_tree(t_node* node){
     if (node == NULL) {
         return;
     }
